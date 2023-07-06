@@ -1,6 +1,6 @@
 const request = require('request');
 const query = process.argv[2];
-const URL = `https://api.thecatapi.com/v1/breeds/search?q=${query}`;
+
 
 // request(URL, function(error, response, body) {
 //     if (error) {
@@ -12,9 +12,19 @@ const URL = `https://api.thecatapi.com/v1/breeds/search?q=${query}`;
 
 
 const fetchBreedDescription = function(breedName, callback) {
+  const URL = `https://api.thecatapi.com/v1/breeds/search?q=${breedName}`;
   request(URL, function(error, response, body) {
-    const data = JSON.parse(body);
-    callback(error, data[0].description);
+    if (error) {
+      callback(error, null);
+    } else {
+      const data = JSON.parse(body);
+      
+      if (data.length) {
+        callback(error, data[0].description);
+      } else {
+        callback(error, null);
+      }
+    }
   });
 };
 
